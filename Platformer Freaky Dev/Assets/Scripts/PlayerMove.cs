@@ -30,6 +30,16 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+            isGrounded = false;
+        }
+        if((Input.GetAxis("Horizontal") != 0) && isGrounded)
+        {
+            rb.velocity = new Vector2(Input.GetAxis("Horizontal")*speed, rb.velocity.y);
+            isWalking = true;
+        }
         if(Input.GetAxis("Horizontal") > 0 && isFacingRight && isWalking && isGrounded)
         {
             Flip();
@@ -45,16 +55,6 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
-            isGrounded = false;
-        }
-        if((Input.GetAxis("Horizontal") != 0) && isGrounded)
-        {
-            rb.velocity = new Vector2(Input.GetAxis("Horizontal")*speed, rb.velocity.y);
-            isWalking = true;
-        }
         if(rb.velocity.y == 0)
         {
             isGrounded = true;
@@ -63,7 +63,6 @@ public class PlayerMove : MonoBehaviour
         if(rb.velocity.x == 0)
         {
             isWalking = false;
-            Debug.Log("Move");
         }
     }
 
