@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Analytics;
+using Vector3 = UnityEngine.Vector3;
+using Vector2 = UnityEngine.Vector2;
+using System;
+using Unity.VisualScripting;
 
 public class PlayerMove : MonoBehaviour
 {
+    public static PlayerMove Instance;
     [SerializeField] private float speed;
     [SerializeField] private float jumpSpeed;
     Rigidbody2D rb;
@@ -15,7 +21,14 @@ public class PlayerMove : MonoBehaviour
     public bool isGrounded;
     public bool isWalking;
     private bool isFacingRight;
-    private float timer = 0f;
+    private float timer;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
     void Start()
     {
         speed = 5f;
@@ -26,6 +39,7 @@ public class PlayerMove : MonoBehaviour
         anim = GetComponent<Animator>();
         isGrounded = true;
         isWalking = false;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     void Update()
@@ -35,7 +49,7 @@ public class PlayerMove : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
             isGrounded = false;
         }
-        if((Input.GetAxis("Horizontal") != 0) && isGrounded)
+        if(Input.GetAxis("Horizontal") != 0)
         {
             rb.velocity = new Vector2(Input.GetAxis("Horizontal")*speed, rb.velocity.y);
             isWalking = true;
@@ -78,7 +92,7 @@ public class PlayerMove : MonoBehaviour
         }
         if(collision.collider.CompareTag("Pipe"))
         {
-            PipeTrasnport();
+            
         }
         if(collision.collider.CompareTag("Coin"))
         {
@@ -86,22 +100,23 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    void PlayerKill()
+    public void PlayerKill()
     {
         Debug.Log("Player Killed");
     }
 
-    void PipeTrasnport()
+    public void PipeTrasnport(UnityEngine.Vector3 target)
     {
         Debug.Log("Pipe Accessed");
+        transform.position = target;
     }
 
-    void EnemyKill()
+    public void EnemyKill()
     {
         Debug.Log("Enemy Killed");
     }
 
-    void CoinCollect()
+    public void CoinCollect()
     {
         Debug.Log("Coin Collected");
     }
