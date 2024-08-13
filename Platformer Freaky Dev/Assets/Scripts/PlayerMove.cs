@@ -7,10 +7,11 @@ using UnityEngine.Analytics;
 using Vector3 = UnityEngine.Vector3;
 using Vector2 = UnityEngine.Vector2;
 using System;
+using Unity.VisualScripting;
 
 public class PlayerMove : MonoBehaviour
 {
-    public static PlayerMove Instance = new PlayerMove();
+    public static PlayerMove Instance;
     [SerializeField] private float speed;
     [SerializeField] private float jumpSpeed;
     Rigidbody2D rb;
@@ -20,11 +21,14 @@ public class PlayerMove : MonoBehaviour
     public bool isGrounded;
     public bool isWalking;
     private bool isFacingRight;
-    private float timer = 0f;
-    void Awake()
-    [
-        
-    ]
+    private float timer;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
     void Start()
     {
         speed = 5f;
@@ -45,7 +49,7 @@ public class PlayerMove : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
             isGrounded = false;
         }
-        if((Input.GetAxis("Horizontal") != 0) && isGrounded)
+        if(Input.GetAxis("Horizontal") != 0)
         {
             rb.velocity = new Vector2(Input.GetAxis("Horizontal")*speed, rb.velocity.y);
             isWalking = true;

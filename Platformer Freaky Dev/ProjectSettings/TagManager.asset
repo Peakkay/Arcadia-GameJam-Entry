@@ -9,6 +9,7 @@ TagManager:
   - Pipe
   - Coin
   - Water
+  - Transporter
   layers:
   - Default
   - TransparentFX
