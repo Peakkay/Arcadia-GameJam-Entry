@@ -72,7 +72,7 @@ public class PlayerMove : MonoBehaviour
         if(rb.velocity.y == 0)
         {
             isGrounded = true;
-            Debug.Log("Ground");
+           // Debug.Log("Ground");
         }
         if(rb.velocity.x == 0)
         {
@@ -84,7 +84,16 @@ public class PlayerMove : MonoBehaviour
     {
         if(collision.collider.CompareTag("EnemyKill"))
         {
-            EnemyKill();
+           // EnemyKill();
+
+           if(collision.transform.position.y + 0.4 < transform.position.y)
+           {
+                EnemyKill();
+                collision.gameObject.active = false;
+           }
+           else{
+            PlayerKill();
+           }
         }
         if(collision.collider.CompareTag("EnemyDie"))
         {
