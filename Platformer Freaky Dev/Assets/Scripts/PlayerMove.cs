@@ -26,6 +26,7 @@ public class PlayerMove : MonoBehaviour
         anim = GetComponent<Animator>();
         isGrounded = true;
         isWalking = false;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     void Update()

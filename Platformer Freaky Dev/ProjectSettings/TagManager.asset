@@ -8,6 +8,7 @@ TagManager:
   - EnemyDie
   - Pipe
   - Coin
+  - Water
   layers:
   - Default
   - TransparentFX
