@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Analytics;
+using Vector3 = UnityEngine.Vector3;
+using Vector2 = UnityEngine.Vector2;
+using System;
 
 public class PlayerMove : MonoBehaviour
 {
+    public static PlayerMove Instance = new PlayerMove();
     [SerializeField] private float speed;
     [SerializeField] private float jumpSpeed;
     Rigidbody2D rb;
@@ -16,6 +21,10 @@ public class PlayerMove : MonoBehaviour
     public bool isWalking;
     private bool isFacingRight;
     private float timer = 0f;
+    void Awake()
+    [
+        
+    ]
     void Start()
     {
         speed = 5f;
@@ -79,7 +88,7 @@ public class PlayerMove : MonoBehaviour
         }
         if(collision.collider.CompareTag("Pipe"))
         {
-            PipeTrasnport();
+            
         }
         if(collision.collider.CompareTag("Coin"))
         {
@@ -87,22 +96,23 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    void PlayerKill()
+    public void PlayerKill()
     {
         Debug.Log("Player Killed");
     }
 
-    void PipeTrasnport()
+    public void PipeTrasnport(UnityEngine.Vector3 target)
     {
         Debug.Log("Pipe Accessed");
+        transform.position = target;
     }
 
-    void EnemyKill()
+    public void EnemyKill()
     {
         Debug.Log("Enemy Killed");
     }
 
-    void CoinCollect()
+    public void CoinCollect()
     {
         Debug.Log("Coin Collected");
     }
