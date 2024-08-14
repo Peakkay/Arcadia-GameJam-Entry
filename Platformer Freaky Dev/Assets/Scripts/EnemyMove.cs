@@ -13,6 +13,7 @@ public class EnemyMove : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     // Update is called once per frame

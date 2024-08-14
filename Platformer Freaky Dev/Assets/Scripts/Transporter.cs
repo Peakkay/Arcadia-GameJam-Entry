@@ -20,7 +20,8 @@ public class Transporter : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D col)
     {
-        if(col.gameObject.CompareTag("Player") &&PlayerMove.Instance.isGrounded && !PlayerMove.Instance.isWalking)
+        Debug.Log(col.transform.parent.gameObject.name + " "+ PlayerMove.Instance.isGrounded + " " + !PlayerMove.Instance.isWalking);
+        if(col.transform.parent.gameObject.CompareTag("Player") &&PlayerMove.Instance.isGrounded && !PlayerMove.Instance.isWalking)
         {
             PlayerMove.Instance.PipeTrasnport(target);
         }

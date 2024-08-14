@@ -14,8 +14,7 @@ public class PlayerMove : MonoBehaviour
     public static PlayerMove Instance;
     [SerializeField] private float speed;
     [SerializeField] private float jumpSpeed;
-    Rigidbody2D rb;
-    BoxCollider2D cd;
+    public Rigidbody2D rb;
     Animator anim;
     public bool gameover;
     public bool isGrounded;
@@ -35,7 +34,6 @@ public class PlayerMove : MonoBehaviour
         jumpSpeed = 10f;
         timer = 0f;
         rb = GetComponent<Rigidbody2D>();
-        cd = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
         isGrounded = true;
         isWalking = false;
@@ -44,27 +42,35 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if(!Win.Instance.Finish)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
-            isGrounded = false;
+            if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+                isGrounded = false;
+            }
+            if(Input.GetAxis("Horizontal") != 0)
+            {
+                rb.velocity = new Vector2(Input.GetAxis("Horizontal")*speed, rb.velocity.y);
+                isWalking = true;
+            }
+            if(isFacingRight && rb.velocity.x > 0)
+            {
+                Flip();
+            }
+            if(!isFacingRight && rb.velocity.x < 0)
+            {
+                Flip();
+            }
+            timer += Time.deltaTime;
+            anim.SetBool("isGrounded", isGrounded);
+            anim.SetBool("isWalking", isWalking);
         }
-        if(Input.GetAxis("Horizontal") != 0)
-        {
-            rb.velocity = new Vector2(Input.GetAxis("Horizontal")*speed, rb.velocity.y);
-            isWalking = true;
+        else{
+            rb.velocity = Vector2.zero;
+            anim.SetBool("isGrounded", false);
+            anim.SetBool("isWalking", false);
         }
-        if(Input.GetAxis("Horizontal") > 0 && isFacingRight && isWalking && isGrounded)
-        {
-            Flip();
-        }
-        if(Input.GetAxis("Horizontal") < 0 && !isFacingRight && isWalking && isGrounded)
-        {
-            Flip();
-        }
-        timer += Time.deltaTime;
-        anim.SetBool("isGrounded", isGrounded);
-        anim.SetBool("isWalking", isWalking);
     }
 
     void FixedUpdate()
@@ -72,7 +78,6 @@ public class PlayerMove : MonoBehaviour
         if(rb.velocity.y == 0)
         {
             isGrounded = true;
-           // Debug.Log("Ground");
         }
         if(rb.velocity.x == 0)
         {
@@ -80,38 +85,10 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.collider.CompareTag("EnemyKill"))
-        {
-           // EnemyKill();
-
-           if(collision.transform.position.y + 0.4 < transform.position.y)
-           {
-                EnemyKill();
-                collision.gameObject.active = false;
-           }
-           else{
-            PlayerKill();
-           }
-        }
-        if(collision.collider.CompareTag("EnemyDie"))
-        {
-            PlayerKill();
-        }
-        if(collision.collider.CompareTag("Pipe"))
-        {
-            
-        }
-        if(collision.collider.CompareTag("Coin"))
-        {
-            CoinCollect();
-        }
-    }
-
     public void PlayerKill()
     {
         Debug.Log("Player Killed");
+        this.gameObject.SetActive(false);
     }
 
     public void PipeTrasnport(UnityEngine.Vector3 target)
@@ -128,10 +105,13 @@ public class PlayerMove : MonoBehaviour
     public void CoinCollect()
     {
         Debug.Log("Coin Collected");
+        Score.Instance.score += 1;
+        Score.Instance.UpdateScore();
     }
     protected void Flip()
     {
         isFacingRight = !isFacingRight;
         transform.localScale = new Vector3(transform.localScale.x*(-1),transform.localScale.y,transform.localScale.z);
     }
+
 }
